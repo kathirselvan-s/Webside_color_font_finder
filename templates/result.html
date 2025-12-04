@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Analysis Result - Color Theme Analyzer</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Analysis Complete</h1>
+            <p>Here's the complete UI color theme extracted from your screenshot</p>
+        </div>
+
+        <div class="result-container">
+            <h2 class="theme-title">Theme: <span>{{ result.theme_name }}</span></h2>
+
+            <div class="screenshot-preview">
+                <img src="/uploads/{{ filename }}" alt="Analyzed screenshot">
+            </div>
+
+            <h3 class="section-title">🎯 Theme Colors</h3>
+            <div class="colors-grid">
+                <div class="color-card">
+                    <h3>Primary</h3>
+                    <div class="swatch" style="background: {{ result.primary.hex }}" data-color="{{ result.primary.hex }}" onclick="copyColor(this)">
+                        <span class="copy-tooltip">Click to copy</span>
+                    </div>
+                    <div class="color-info">
+                        <span class="color-hex" onclick="copyText('{{ result.primary.hex }}')">{{ result.primary.hex }}</span>
+                        <span class="color-name">{{ result.primary.name }}</span>
+                        <span class="color-percent">{{ (result.primary.percent*100)|round(1) }}%</span>
+                        <span class="color-rgb">RGB({{ result.primary.rgb[0] }}, {{ result.primary.rgb[1] }}, {{ result.primary.rgb[2] }})</span>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <h3>Secondary</h3>
+                    <div class="swatch" style="background: {{ result.secondary.hex }}" data-color="{{ result.secondary.hex }}" onclick="copyColor(this)">
+                        <span class="copy-tooltip">Click to copy</span>
+                    </div>
+                    <div class="color-info">
+                        <span class="color-hex" onclick="copyText('{{ result.secondary.hex }}')">{{ result.secondary.hex }}</span>
+                        <span class="color-name">{{ result.secondary.name }}</span>
+                        <span class="color-percent">{{ (result.secondary.percent*100)|round(1) }}%</span>
+                        <span class="color-rgb">RGB({{ result.secondary.rgb[0] }}, {{ result.secondary.rgb[1] }}, {{ result.secondary.rgb[2] }})</span>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <h3>Accent</h3>
+                    <div class="swatch" style="background: {{ result.accent.hex }}" data-color="{{ result.accent.hex }}" onclick="copyColor(this)">
+                        <span class="copy-tooltip">Click to copy</span>
+                    </div>
+                    <div class="color-info">
+                        <span class="color-hex" onclick="copyText('{{ result.accent.hex }}')">{{ result.accent.hex }}</span>
+                        <span class="color-name">{{ result.accent.name }}</span>
+                        <span class="color-percent">{{ (result.accent.percent*100)|round(1) }}%</span>
+                        <span class="color-rgb">RGB({{ result.accent.rgb[0] }}, {{ result.accent.rgb[1] }}, {{ result.accent.rgb[2] }})</span>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <h3>Background</h3>
+                    <div class="swatch" style="background: {{ result.background.hex }}" data-color="{{ result.background.hex }}" onclick="copyColor(this)">
+                        <span class="copy-tooltip">Click to copy</span>
+                    </div>
+                    <div class="color-info">
+                        <span class="color-hex" onclick="copyText('{{ result.background.hex }}')">{{ result.background.hex }}</span>
+                        <span class="color-name">{{ result.background.name }}</span>
+                        <span class="color-rgb">RGB({{ result.background.rgb[0] }}, {{ result.background.rgb[1] }}, {{ result.background.rgb[2] }})</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">📝 Text & Contrast</h3>
+            <div class="contrast-section">
+                <div class="text-contrast-demo" style="background: {{ result.background.hex }};">
+                    <span style="color: {{ result.text_on_background }}; font-size: 18px; font-weight: 600;">
+                        Sample Text on Background
+                    </span>
+                </div>
+                <div class="contrast-info">
+                    <p><strong>Text Color:</strong> <span class="color-hex" onclick="copyText('{{ result.text_on_background }}')">{{ result.text_on_background }}</span></p>
+                    <p><strong>Best for readability on the detected background color</strong></p>
+                </div>
+            </div>
+
+            <h3 class="section-title">🎨 Complete Color Palette</h3>
+            <div class="palette-grid">
+                {% for p in result.palette %}
+                <div class="palette-item">
+                    <div class="swatch" style="background: {{ p.hex }}" data-color="{{ p.hex }}" onclick="copyColor(this)">
+                        <span class="copy-tooltip">Click to copy</span>
+                    </div>
+                    <div class="meta">
+                        <span class="hex">{{ p.hex }}</span>
+                        <span class="name">{{ p.name }}</span>
+                        <span class="percent">{{ (p.percent*100)|round(1) }}%</span>
+                        <span class="rgb">RGB({{ p.rgb[0] }}, {{ p.rgb[1] }}, {{ p.rgb[2] }})</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h3 class="section-title">🔤 Typography</h3>
+            <div class="font-section">
+                <div class="font-grid">
+                    <div class="font-card">
+                        <h4>Detected Style</h4>
+                        <p class="font-value">{{ fonts.font_style | capitalize }}</p>
+                    </div>
+                    <div class="font-card">
+                        <h4>Heading Size</h4>
+                        <p class="font-value">{{ fonts.heading_size }}</p>
+                    </div>
+                    <div class="font-card">
+                        <h4>Body Size</h4>
+                        <p class="font-value">{{ fonts.body_size }}</p>
+                    </div>
+                    <div class="font-card">
+                        <h4>Small Size</h4>
+                        <p class="font-value">{{ fonts.small_size }}</p>
+                    </div>
+                </div>
+
+                <div class="font-preview">
+                    <h4>Font Preview</h4>
+                    <div class="preview-samples">
+                        <p class="sample-heading" style="font-family: {{ fonts.recommended_fonts.heading }}; font-size: {{ fonts.heading_size }};">
+                            Heading Text Sample
+                        </p>
+                        <p class="sample-body" style="font-family: {{ fonts.recommended_fonts.body }}; font-size: {{ fonts.body_size }}; line-height: {{ fonts.line_height }};">
+                            Body text sample. This is how your regular paragraph text would appear with the detected typography settings.
+                        </p>
+                        <p class="sample-mono" style="font-family: {{ fonts.recommended_fonts.monospace }}; font-size: {{ fonts.small_size }};">
+                            const code = "monospace sample";
+                        </p>
+                    </div>
+                </div>
+
+                <div class="font-recommendations">
+                    <h4>Recommended Font Stacks</h4>
+                    <div class="rec-list">
+                        <div class="rec-item">
+                            <span class="rec-label">Headings:</span>
+                            <code onclick="copyText(this.textContent)">{{ fonts.recommended_fonts.heading }}</code>
+                        </div>
+                        <div class="rec-item">
+                            <span class="rec-label">Body:</span>
+                            <code onclick="copyText(this.textContent)">{{ fonts.recommended_fonts.body }}</code>
+                        </div>
+                        <div class="rec-item">
+                            <span class="rec-label">Code:</span>
+                            <code onclick="copyText(this.textContent)">{{ fonts.recommended_fonts.monospace }}</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">📋 Export Color Theme</h3>
+            <div class="export-section">
+                <div class="code-block">
+                    <pre id="cssColorCode">:root {
+  /* Colors */
+  --color-primary: {{ result.primary.hex }};
+  --color-secondary: {{ result.secondary.hex }};
+  --color-accent: {{ result.accent.hex }};
+  --color-background: {{ result.background.hex }};
+  --color-text: {{ result.text_on_background }};
+}</pre>
+                    <button class="copy-btn" onclick="copyText(document.getElementById('cssColorCode').textContent)">Copy CSS</button>
+                </div>
+            </div>
+
+            <h3 class="section-title">📋 Export Typography Theme</h3>
+            <div class="export-section">
+                <div class="code-block">
+                    <pre id="cssFontCode">:root {
+  /* Typography */
+  --font-heading: {{ fonts.recommended_fonts.heading }};
+  --font-body: {{ fonts.recommended_fonts.body }};
+  --font-mono: {{ fonts.recommended_fonts.monospace }};
+  --font-size-heading: {{ fonts.heading_size }};
+  --font-size-body: {{ fonts.body_size }};
+  --font-size-small: {{ fonts.small_size }};
+  --line-height: {{ fonts.line_height }};
+}</pre>
+                    <button class="copy-btn" onclick="copyText(document.getElementById('cssFontCode').textContent)">Copy CSS</button>
+                </div>
+            </div>
+
+            <h3 class="section-title">📋 Export Complete Theme</h3>
+            <div class="export-section">
+                <div class="code-block">
+                    <pre id="cssFullCode">:root {
+  /* Colors */
+  --color-primary: {{ result.primary.hex }};
+  --color-secondary: {{ result.secondary.hex }};
+  --color-accent: {{ result.accent.hex }};
+  --color-background: {{ result.background.hex }};
+  --color-text: {{ result.text_on_background }};
+
+  /* Typography */
+  --font-heading: {{ fonts.recommended_fonts.heading }};
+  --font-body: {{ fonts.recommended_fonts.body }};
+  --font-mono: {{ fonts.recommended_fonts.monospace }};
+  --font-size-heading: {{ fonts.heading_size }};
+  --font-size-body: {{ fonts.body_size }};
+  --font-size-small: {{ fonts.small_size }};
+  --line-height: {{ fonts.line_height }};
+}</pre>
+                    <button class="copy-btn" onclick="copyText(document.getElementById('cssFullCode').textContent)">Copy CSS</button>
+                </div>
+            </div>
+
+            <a href="/" class="back-link">← Analyze Another Screenshot</a>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

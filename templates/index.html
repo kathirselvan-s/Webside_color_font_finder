@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Website Color Theme Analyzer</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Website Color Theme Analyzer</h1>
+            <p>Upload a screenshot to extract and analyze the color palette</p>
+        </div>
+
+        <div class="upload-card">
+            <form id="uploadForm" method="post" enctype="multipart/form-data">
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">📸</div>
+                    <h2>Drop your screenshot here</h2>
+                    <p>or click to browse files</p>
+                    <input type="file" name="screenshot" accept="image/*" required class="file-input" id="fileInput">
+                    <button type="button" class="browse-btn" id="browseBtn">Browse Files</button>
+                </div>
+
+                <div class="preview-container" id="previewContainer">
+                    <img id="previewImg" class="preview-img" alt="Preview">
+                </div>
+
+                <button type="submit" class="analyze-btn" id="analyzeBtn" disabled>
+                    ✨ Analyze Colors
+                </button>
+
+                <div class="loading" id="loading">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
