@@ -4,7 +4,7 @@ import os
 from utils.color_utils import analyze_image_colors
 from utils.font_utils import analyze_font_styles
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = '/tmp/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 app = Flask(__name__)
